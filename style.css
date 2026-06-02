@@ -46,21 +46,70 @@ main {
     overflow-y: auto;
 }
 
-/* 날짜 컨트롤러 스타일 */
-.date-controller {
+/* 주간 컨트롤러 스타일 */
+.weekly-controller {
     display: flex;
     justify-content: space-between;
     align-items: center;
     margin-bottom: 24px;
 }
 
-#current-date-display {
-    font-size: 1.25rem;
-    font-weight: 600;
+.weekly-calendar {
+    display: flex;
+    gap: 6px;
+    flex: 1;
+    justify-content: center;
+}
+
+.day-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background-color: transparent;
     color: #333;
 }
 
-.date-controller .btn-icon {
+.day-item:hover {
+    background-color: #f1f1f1;
+}
+
+.day-item.active {
+    background-color: #672be0;
+    color: white;
+}
+
+.day-item.today .day-number {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.day-name {
+    font-size: 0.8rem;
+    margin-bottom: 4px;
+}
+
+.day-number {
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.todo-count {
+    font-size: 0.75rem;
+    margin-top: 4px;
+    background-color: rgba(0,0,0,0.1);
+    border-radius: 12px;
+    padding: 2px 6px;
+}
+
+.day-item.active .todo-count {
+    background-color: rgba(255,255,255,0.3);
+}
+
+.weekly-controller .btn-icon {
     font-size: 1.25rem;
     font-weight: bold;
 }

@@ -4,9 +4,9 @@ const todoInputEl = document.getElementById('todo-input');
 const messageContainerEl = document.getElementById('message-container');
 const todoListEl = document.getElementById('todo-list');
 const filterTabsEl = document.getElementById('filter-tabs');
-const prevDateBtnEl = document.getElementById('prev-date-btn');
-const nextDateBtnEl = document.getElementById('next-date-btn');
-const currentDateDisplayEl = document.getElementById('current-date-display');
+const prevWeekBtnEl = document.getElementById('prev-week-btn');
+const nextWeekBtnEl = document.getElementById('next-week-btn');
+const weeklyCalendarEl = document.getElementById('weekly-calendar');
 
 // Todo 데이터 상태 관리
 let todos = JSON.parse(localStorage.getItem('todos')) || [];
@@ -18,6 +18,9 @@ let selectedDate = new Date();
  */
 function saveTodos() {
     localStorage.setItem('todos', JSON.stringify(todos));
+    if (typeof renderWeeklyCalendar === 'function') {
+        renderWeeklyCalendar(); // 데이터 변경 시 주간 달력 투두 개수 갱신
+    }
 }
 
 /**
@@ -31,10 +34,53 @@ function formatDate(dateObj) {
 }
 
 /**
- * 화면의 날짜 표시 업데이트
+ * 선택된 날짜가 속한 주의 월요일을 구하는 함수
  */
-function updateDateDisplay() {
-    currentDateDisplayEl.textContent = formatDate(selectedDate);
+function getWeekStart(dateObj) {
+    const d = new Date(dateObj);
+    const day = d.getDay(); // 0: 일요일, 1: 월요일, ..., 6: 토요일
+    // 월요일을 주의 시작으로 계산
+    const diff = d.getDate() - day + (day === 0 ? -6 : 1);
+    return new Date(d.setDate(diff));
+}
+
+/**
+ * 주간 달력 렌더링 함수
+ */
+function renderWeeklyCalendar() {
+    if (!weeklyCalendarEl) return;
+    weeklyCalendarEl.innerHTML = '';
+    
+    const startOfWeek = getWeekStart(selectedDate);
+    const todayStr = formatDate(new Date());
+    const selectedStr = formatDate(selectedDate);
+    
+    const daysStr = ['월', '화', '수', '목', '금', '토', '일'];
+    
+    for (let i = 0; i < 7; i++) {
+        const currentDate = new Date(startOfWeek);
+        currentDate.setDate(startOfWeek.getDate() + i);
+        const dateStr = formatDate(currentDate);
+        
+        // 투두 개수 계산
+        const count = todos.filter(todo => todo.date === dateStr).length;
+        
+        const dayDiv = document.createElement('div');
+        dayDiv.className = `day-item ${dateStr === selectedStr ? 'active' : ''} ${dateStr === todayStr ? 'today' : ''}`;
+        dayDiv.addEventListener('click', () => {
+            selectedDate = currentDate;
+            renderWeeklyCalendar();
+            renderTodos();
+        });
+        
+        dayDiv.innerHTML = `
+            <div class="day-name">${daysStr[i]}</div>
+            <div class="day-number">${currentDate.getDate()}</div>
+            <div class="todo-count">${count > 0 ? count : 0}</div>
+        `;
+        
+        weeklyCalendarEl.appendChild(dayDiv);
+    }
 }
 
 /**
@@ -239,19 +285,19 @@ function renderTodos() {
  * Todo 앱 초기화 함수
  */
 function init() {
-    // 초기 날짜 렌더링
-    updateDateDisplay();
+    // 초기 주간 달력 렌더링
+    renderWeeklyCalendar();
 
-    // 날짜 이동 이벤트 리스너
-    prevDateBtnEl.addEventListener('click', () => {
-        selectedDate.setDate(selectedDate.getDate() - 1);
-        updateDateDisplay();
+    // 주간 이동 이벤트 리스너
+    prevWeekBtnEl.addEventListener('click', () => {
+        selectedDate.setDate(selectedDate.getDate() - 7);
+        renderWeeklyCalendar();
         renderTodos();
     });
 
-    nextDateBtnEl.addEventListener('click', () => {
-        selectedDate.setDate(selectedDate.getDate() + 1);
-        updateDateDisplay();
+    nextWeekBtnEl.addEventListener('click', () => {
+        selectedDate.setDate(selectedDate.getDate() + 7);
+        renderWeeklyCalendar();
         renderTodos();
     });
 

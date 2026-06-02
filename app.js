@@ -9,9 +9,16 @@ const nextDateBtnEl = document.getElementById('next-date-btn');
 const currentDateDisplayEl = document.getElementById('current-date-display');
 
 // Todo 데이터 상태 관리
-let todos = [];
+let todos = JSON.parse(localStorage.getItem('todos')) || [];
 let currentFilter = 'all'; // 'all', 'active', 'completed'
 let selectedDate = new Date();
+
+/**
+ * 변경된 Todo 데이터를 로컬스토리지에 저장하는 함수
+ */
+function saveTodos() {
+    localStorage.setItem('todos', JSON.stringify(todos));
+}
 
 /**
  * 날짜 포맷 함수 (YYYY-MM-DD)
@@ -71,6 +78,7 @@ function addTodo(event) {
     
     todos.push(newTodo); // 배열에 추가
     todoInputEl.value = ''; // 입력창 초기화
+    saveTodos(); // 로컬스토리지 저장
     renderTodos(); // 화면 갱신
 }
 
@@ -79,6 +87,7 @@ function addTodo(event) {
  */
 function deleteTodo(id) {
     todos = todos.filter(todo => todo.id !== id);
+    saveTodos(); // 로컬스토리지 저장
     renderTodos();
 }
 
@@ -92,6 +101,7 @@ function toggleTodo(id) {
         }
         return todo;
     });
+    saveTodos(); // 로컬스토리지 저장
     renderTodos();
 }
 
@@ -110,6 +120,7 @@ function editTodo(id, newText) {
         }
         return todo;
     });
+    saveTodos(); // 로컬스토리지 저장
     renderTodos();
 }
 

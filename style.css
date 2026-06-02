@@ -91,6 +91,36 @@ main {
     min-height: 20px; /* 공간 유지 */
 }
 
+/* 필터 탭 스타일 */
+.filter-tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.filter-btn {
+    background: none;
+    border: none;
+    padding: 8px 16px;
+    font-size: 1rem;
+    cursor: pointer;
+    color: #666;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+
+.filter-btn:hover {
+    background-color: #f1f1f1;
+}
+
+.filter-btn.active {
+    background-color: #e5d9f7;
+    color: #672be0;
+    font-weight: 600;
+}
+
 /* 리스트 스타일 초기화 */
 .todo-list {
     list-style: none;

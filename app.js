@@ -3,9 +3,11 @@ const todoFormEl = document.getElementById('todo-form');
 const todoInputEl = document.getElementById('todo-input');
 const messageContainerEl = document.getElementById('message-container');
 const todoListEl = document.getElementById('todo-list');
+const filterTabsEl = document.getElementById('filter-tabs');
 
 // Todo 데이터 상태 관리
 let todos = [];
+let currentFilter = 'all'; // 'all', 'active', 'completed'
 
 /**
  * 안내 메시지 표시 함수
@@ -143,8 +145,16 @@ function renderTodos() {
     // 기존 목록 초기화
     todoListEl.innerHTML = '';
     
+    // 필터링 적용
+    let filteredTodos = todos;
+    if (currentFilter === 'active') {
+        filteredTodos = todos.filter(todo => !todo.completed);
+    } else if (currentFilter === 'completed') {
+        filteredTodos = todos.filter(todo => todo.completed);
+    }
+    
     // 배열 순회하며 DOM 요소 생성
-    todos.forEach(todo => {
+    filteredTodos.forEach(todo => {
         const li = document.createElement('li');
         li.className = `todo-item ${todo.completed ? 'completed' : ''}`;
         
@@ -197,6 +207,16 @@ function init() {
     // 폼 제출 이벤트(생성) 리스너 등록
     todoFormEl.addEventListener('submit', addTodo);
     
+    // 필터 탭 클릭 이벤트 리스너 등록
+    filterTabsEl.addEventListener('click', (e) => {
+        if (e.target.classList.contains('filter-btn')) {
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            e.target.classList.add('active');
+            currentFilter = e.target.dataset.filter;
+            renderTodos();
+        }
+    });
+
     // 초기 렌더링
     renderTodos();
 }

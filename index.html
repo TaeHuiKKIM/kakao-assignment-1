@@ -24,6 +24,13 @@
             <!-- 안내 메시지 (에러 등) -->
             <div id="message-container" class="message-container"></div>
 
+            <!-- 필터링 탭 -->
+            <div class="filter-tabs" id="filter-tabs">
+                <button class="filter-btn active" data-filter="all">전체</button>
+                <button class="filter-btn" data-filter="active">진행 중</button>
+                <button class="filter-btn" data-filter="completed">완료</button>
+            </div>
+
             <!-- Todo 리스트 출력 영역 -->
             <ul id="todo-list" class="todo-list">
                 <!-- 자바스크립트로 리스트가 여기에 렌더링 됩니다 -->

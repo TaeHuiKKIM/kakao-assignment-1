@@ -4,10 +4,31 @@ const todoInputEl = document.getElementById('todo-input');
 const messageContainerEl = document.getElementById('message-container');
 const todoListEl = document.getElementById('todo-list');
 const filterTabsEl = document.getElementById('filter-tabs');
+const prevDateBtnEl = document.getElementById('prev-date-btn');
+const nextDateBtnEl = document.getElementById('next-date-btn');
+const currentDateDisplayEl = document.getElementById('current-date-display');
 
 // Todo 데이터 상태 관리
 let todos = [];
 let currentFilter = 'all'; // 'all', 'active', 'completed'
+let selectedDate = new Date();
+
+/**
+ * 날짜 포맷 함수 (YYYY-MM-DD)
+ */
+function formatDate(dateObj) {
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+}
+
+/**
+ * 화면의 날짜 표시 업데이트
+ */
+function updateDateDisplay() {
+    currentDateDisplayEl.textContent = formatDate(selectedDate);
+}
 
 /**
  * 안내 메시지 표시 함수
@@ -44,7 +65,8 @@ function addTodo(event) {
     const newTodo = {
         id: generateId(),
         text: text,
-        completed: false
+        completed: false,
+        date: formatDate(selectedDate) // 현재 선택된 날짜 저장
     };
     
     todos.push(newTodo); // 배열에 추가
@@ -145,8 +167,10 @@ function renderTodos() {
     // 기존 목록 초기화
     todoListEl.innerHTML = '';
     
-    // 필터링 적용
-    let filteredTodos = todos;
+    // 1차 필터링: 선택된 날짜에 해당하는 Todo만 추출 (날짜 정보가 없으면 보이도록 임시 허용)
+    let filteredTodos = todos.filter(todo => todo.date === formatDate(selectedDate) || !todo.date);
+    
+    // 2차 필터링: 상태 적용
     if (currentFilter === 'active') {
         filteredTodos = todos.filter(todo => !todo.completed);
     } else if (currentFilter === 'completed') {
@@ -204,6 +228,22 @@ function renderTodos() {
  * Todo 앱 초기화 함수
  */
 function init() {
+    // 초기 날짜 렌더링
+    updateDateDisplay();
+
+    // 날짜 이동 이벤트 리스너
+    prevDateBtnEl.addEventListener('click', () => {
+        selectedDate.setDate(selectedDate.getDate() - 1);
+        updateDateDisplay();
+        renderTodos();
+    });
+
+    nextDateBtnEl.addEventListener('click', () => {
+        selectedDate.setDate(selectedDate.getDate() + 1);
+        updateDateDisplay();
+        renderTodos();
+    });
+
     // 폼 제출 이벤트(생성) 리스너 등록
     todoFormEl.addEventListener('submit', addTodo);
     

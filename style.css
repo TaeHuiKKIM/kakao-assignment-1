@@ -46,6 +46,25 @@ main {
     overflow-y: auto;
 }
 
+/* 날짜 컨트롤러 스타일 */
+.date-controller {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+#current-date-display {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #333;
+}
+
+.date-controller .btn-icon {
+    font-size: 1.25rem;
+    font-weight: bold;
+}
+
 /* 입력 폼 스타일 */
 .todo-form {
     display: flex;

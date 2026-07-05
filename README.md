@@ -2,6 +2,12 @@
 
 Vanilla JS만으로 만든 깔끔하고 미니멀한 Todo 리스트 애플리케이션입니다.
 
+## Screenshots
+
+| Desktop | Mobile |
+| --- | --- |
+| ![desktop](docs/screenshots/home-desktop.png) | ![mobile](docs/screenshots/home-mobile.png) |
+
 ## 파일 구조
 ```markdown
 todo-vanilla/
